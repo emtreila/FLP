@@ -1,0 +1,39 @@
+% 4. a. Write a predicate to determine the difference of two sets.
+%  b. Write a predicate to add value 1 after every even element from a
+% list.
+
+% is_in_list(l1...ln,l) = { false, n = 0
+%                           true, l1 = e
+%                           is_in_list(l2...ln,l), otherwise
+% is_in_list(i,i)
+is_in_list([H|_],H):-!.
+is_in_list([_|T],E):-
+    is_in_list(T,E).
+
+% difference(a1...an, b1...bm)= { [], n = 0
+%                                 a1 U difference(a2...an, b1...bm),
+%                                        is_in_list(b1...bm,a1) = false
+%                                 difference(a2...an,b1...bm), otherwise
+% difference(i,i,o)
+difference([],_,[]).
+difference([H|T],B,[H|R]):-
+    not(is_in_list(B,H)), !,
+    difference(T,B,R).
+difference([_|T],B,R):-
+    difference(T,B,R).
+
+% even(n) = { true, n%2==0
+%             false, otherwise
+% even(i)
+even(N):- N mod 2 =:= 0.
+
+% add_one(l1...ln) = { [], n = 0
+%                      [l1,1] U add_one(l2...ln) , even(l1)=true
+%                      [l1] U add_one(l2...ln), otherwise
+% add_one(i,o)
+add_one([],[]).
+add_one([H|T],[H,1|R]):-
+    even(H), !,
+    add_one(T,R).
+add_one([H|T],[H|R]):-
+    add_one(T,R).

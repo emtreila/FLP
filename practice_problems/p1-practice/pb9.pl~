@@ -1,0 +1,20 @@
+%9. a. Insert an element on the position n in a list.
+% b. Define a predicate to determine the greatest common divisor of all
+% numbers from a list.
+
+%insert_pos(l1...ln,pos,elem,cnt) = { [], n = 0
+%                         [l1] U insert_pos(l2...ln,pos,elem,cnt),pos!=cnt
+%                         [l1,elem] U insert_pos(l2...ln,pos,elem,cnt),
+%                                                            pos=cnt
+% insert_pos(i,i,i,i,o)
+insert_pos([],_,_,_,[]).
+insert_pos([H|T],P,E,P,[E,H|R]):- !,
+    C1 is P+2,
+    insert_pos(T,P,E,C1,R).
+insert_pos([H|T],P,E,C,[H|R]):-
+    C1 is C+1,
+    insert_pos(T,P,E,C1,R).
+
+insert_main([H|T],POS,ELEM,R):- insert_pos([H|T],POS,ELEM,1,R).
+
+

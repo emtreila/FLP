@@ -1,0 +1,37 @@
+% 2. a. Write a predicate to remove all occurrences of a certain atom from% a list.
+% b. Define a predicate to produce a list of pairs (atom n) from an
+% initial list of atoms. In this initial list atom has n occurrences.
+% Eg.:numberatom([1, 2, 1, 2, 1, 3, 1], X)=>X =[[1, 4], [2, 2], [3, 1]]
+
+% remove(l1...ln,a) = { [], n = 0
+%		        [l1] U remove([l2...ln],a), l1 != a
+%			remove([l2...ln]), otherwise
+% remove(i,i,o)
+remove([],_,[]).
+remove([H|T],A,R):-
+    H == A, !,
+    remove(T,A,R).
+remove([H|T],A,[H|R]):-
+    remove(T,A,R).
+
+% nr_occ(l1...ln,l) = { 0, n = 0
+%                       1 + nr_occ(l2...ln,l), 11==l
+%                       nr_occ(l2...ln), otherwise
+% nr_occ(i,i,o)
+nr_occ([],_,0).
+nr_occ([H|T],H,R):-
+     !,
+     nr_occ(T,H,R1),
+     R is R1 + 1.
+
+nr_occ([_|T],L,R):-
+    nr_occ(T,L,R).
+
+%number_atom(l1...ln) = {[], n = 0
+%                [[l1|nr_occ(l1...ln)] | number_atom(remove(l1...ln,l1))]
+%number_atom(i,o)
+number_atom([],[]).
+number_atom([H|T],[[H,Cnt]|R]):-
+    nr_occ([H|T],H,Cnt),
+    remove([H|T],H,L),
+    number_atom(L,R).

@@ -1,0 +1,49 @@
+% 5. a. Write a predicate to compute the union of two sets.
+% b. Write a predicate to determine the set of all the pairs of
+% elements in a list.
+% Eg.: L = [a b c d] => [[a b] [a c] [a d] [b c] [b d] [c d]].
+
+% is_in_list(l1...ln,l) = { false, n = 0
+%                           true, l1 = e
+%                           is_in_list(l2...ln,l), otherwise
+% is_in_list(i,i)
+is_in_list([H|_],H):-!.
+is_in_list([_|T],E):-
+    is_in_list(T,E).
+
+% union(a1...an,b1...bm) = { b1...bm, n = 0
+%                            union(a2...an,b1...bm),
+%                                  is_in_list(b1...bm,a1) = true
+%                            [a1|union(a2...an,b1...bm)],otherwise
+% union(i,i,o)
+union([],B,B).
+union([H|T], B, R):-
+    is_in_list(B, H), !,
+    union(T, B, R).
+union([H|T], B, [H|R]):-
+    union(T, B, R).
+
+% append_lists(a1...an,b1...bm) = { b1...bm, n = 0
+%                       [a1] U append_lists(a2...an,b1...bm),otherwise
+% append_lists(i,i,o)
+append_lists([],L,L).
+append_lists([H|T],L,[H|R]):-
+    append_lists(T,L,R).
+
+% make_pairs(el,l1...ln) = { [], n = 0
+%                           [[el,l1]|make_pairs(el,l2...ln)]
+% make_pairs(i,i,o)
+make_pairs(_,[],[]).
+make_pairs(E,[H|T],[[E,H]|R]):-
+    make_pairs(E,T,R).
+
+
+% pairs(l1...ln) = { [], n < 2
+%                    make_pairs(l1, l2...ln) U pairs(l2...ln),otherise
+% pairs(i,o)
+pairs([], []).
+pairs([_], []).
+pairs([H|T], R) :-
+    make_pairs(H, T, R1),
+    pairs(T, R2),
+    append_lists(R1, R2, R).

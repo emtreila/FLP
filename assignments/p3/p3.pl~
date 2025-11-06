@@ -1,0 +1,42 @@
+% 10. For a list a1...an with integer and distinct numbers, define a predicate to
+% determine all subsets with sum of elements divisible with n.
+
+% len(l1...ln) = { 0, n = 0
+%                  1 + len(l2...ln), otherwise
+% len(i,o)
+len([],0).
+len([_|T],N):-
+    len(T,N1),
+    N is N1 + 1.
+
+% sum(l1...ln) = { 0, n = 0
+%                  l1 + sum(l2...ln), otherwise
+% sum(i,o)
+sum([],0).
+sum([H|T],S):-
+    sum(T,S1),
+    S is S1 + H.
+
+% is_divisible(X,Y) = { true, X % Y == 0
+%                       false, otherwise
+% is_divisible(i,i)
+is_divisible(X,Y):-
+    X mod Y =:= 0.
+
+% subset(l1...ln) = { [], n = 0
+%                    [l1 | subset(l2...ln)] U subset[l2...ln],otherwise
+% subset(i,o)
+subset([],[]).
+subset([H|T],[H|Rest]):-
+    subset(T,Rest).
+subset([_|T], Rest) :-
+    subset(T, Rest).
+
+my_sub(L):-
+    len(L,N),
+    subset(L,Sub),
+    sum(Sub,S),
+    is_divisible(S,N),
+    write(Sub),nl,
+    fail.
+my_sub(_).

@@ -1,0 +1,17 @@
+% 11. a. Write a predicate to substitute an element from a list with another element
+% in the list.
+% b. Write a predicate to create the sublist (lm, …, ln) from the list
+% (l1,…, lk).
+
+
+% substitute(l1..ln, elem, sub) - { [], n = 0
+%                              [l1] U substitute(l2...ln,elem,sub),
+%                                                     l1!=elem
+%                              [sub] U substitute(l2...ln,elem,sub),
+%                                                     l1=elem
+%substitute(i,i,i,o)
+substitute([],_,_,[]).
+substitute([H|T],H,S,[S|R]):- !,
+    substitute(T,H,S,R).
+substitute([H|T],E,S,[H|R]):-
+    substitute(T,E,S,R).
