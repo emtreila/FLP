@@ -1,0 +1,21 @@
+% 1.4 Consider the PROLOG predicates p(integer), q(integer), r(integer)
+% with the flow model (o)and the predicate s.
+
+p(1).
+p(2).
+
+q(1).
+q(2).
+
+r(1).
+r(2).
+
+s :-
+    p(X),
+    q(Y),
+    r(Z),
+    write(X, Y, Z),
+    nl.
+
+% Give the result of the following goal: s. Justify the answer.
+

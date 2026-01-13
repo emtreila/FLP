@@ -1,0 +1,45 @@
+% II. For a given value N, write a PROLOG program to generate the list
+% of all permutations with elements N,N+1,...,2*N-1 with property that
+% absolute value of difference between two consecutive elements from
+% each permutation is <= 2. Write the mathematical model, flow model and
+% the meaning of all variables for each predicate used.
+
+% range(a,b) = { [b], a = b
+%               a U range(a+1, b), otherwise
+% range(i,i,o)
+range(B,B,[B]).
+range(A,B,[A|R]):-
+    A < B,
+    A1 is A + 1,
+    range(A1,B,R).
+
+% remove(l1...ln, elem) = { [], n = 0
+%                          l1 U remove(l2...ln, elem), l1 != elem
+%                          remove(l2...ln, elem), l1 == elem
+% remove(i,i,o)
+remove([H|T],H,T).
+remove([H|T],X,[H|R]):-
+    remove(T,X,R).
+
+% perm(l1...ln) = { [], n = 0
+%               li U perm(l1...l(i-1) l(i+1)...ln), 1<=i<=n, otherwise
+% perm(i,o)
+perm([],[]).
+perm(L,[H|T]):-
+    remove(L,H,R),
+    perm(R,T).
+
+% diff(l1...ln) = { true, abs(l1-l2) <= 2 and diff(l2...ln)
+%                   false, otherwise
+% diff(i)
+diff([_]).
+diff([A,B|T]):-
+    abs(A-B) =< 2,
+    diff([B|T]).
+
+
+solve(N,R):-
+    M is 2*N+1,
+    range(N,M,I),
+    perm(I,R),
+    diff(R).

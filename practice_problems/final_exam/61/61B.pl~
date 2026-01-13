@@ -1,0 +1,50 @@
+% B. Given a nonlinear list composed of numbers greater or equal to 2,
+% write a SWI-PROLOG program that replaces each nonprime number with the
+% sum of its own proper divisors. Repeat the process until the list
+% contains only prime numbers.
+
+%For example, for the list: [10, 20, 30, 40]
+%the result will be: [7, 7, 41, 7]
+% (the initial list becomes first
+% [7, 21, 41, 49], then
+% [7, 10, 41, 7] and finally
+% [7, 7, 41, 7]).
+% Return only the final list.
+
+
+divisible(X, Y):-
+    0 is X mod Y.
+
+divisible_by_any(X, Y):-
+    Y*Y =< X,
+    ( divisible(X,Y);
+    Y1 is Y + 1,
+      divisible_by_any(X, Y1)
+    ).
+
+is_prime(X):-
+    X > 1,
+    not(divisible_by_any(X, 2)).
+
+sum_proper(X,Y,0):-
+    Y >= X.
+sum_proper(X,Y,S):-
+    Y < X,
+    divisible(X,Y),
+    Y1 is Y + 1,
+    sum_proper(X,Y1,S1),
+    S is S1 + Y.
+sum_proper(X,Y,S):-
+    Y < X,
+    \+ divisible(X,Y),
+    Y1 is Y + 1,
+    sum_proper(X,Y1,S).
+
+solve([],[]).
+solve([H|T],[H|R]):-
+    is_prime(H),
+    solve(T,R).
+solve([H|T],[A|R]):-
+    \+ is_prime(H),
+    sum_proper(H,2,A),
+    solve(T,R).

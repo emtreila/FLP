@@ -1,0 +1,15 @@
+% 1.4 Let L be a numerical list and consider the following PROLOG
+% definition for the predicate f(list, list) with the flow model (i, o):
+%
+ f([], []).
+ f([H|T], [H|S]) :-
+    f(T, S).
+ f([H|T], S) :-
+    H mod 2 =:= 0,
+    f(T, S).
+%
+% Give the result of the following goal:
+% f([1, 2, 3], L).
+% Justify the answer.
+
+%f([1,2,3],L) -> [1,2,3], [1,3]

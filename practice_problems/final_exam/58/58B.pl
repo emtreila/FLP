@@ -1,0 +1,37 @@
+% B. Given a linear list of numbers, write a SWI-Prolog program that
+% replaces every sequence of consecutive equal numbers with the sum of
+% the sequence. This process must be repeated until there are no
+% consecutive equal elements in the list.
+
+%For example, for the list
+%[1, 2, 1, 1, 4, 5, 6, 7, 7, 7, 3, 3, 3, 3, 3, 3, 3, 10],
+%the result will be
+%[1, 8, 5, 6, 42, 10].
+
+% take_all(e,l1...ln) = { e, n = 0
+%                        l1 U take_all(e,l2...ln), e!=l1
+%                        e + take_all(e, l2...ln), e=l1
+% take_all(i,i,o,o)
+take_all(E,[], E,[]).
+take_all(E, [E|T], S, R):-
+    take_all(E,T,S1,R),
+    S is S1 + E.
+take_all(E,[H|T],E,[H|T]):-
+    E \= H.
+
+% sum_seq(l1...ln) = { [], n = 0
+%                     take_all(l1,l2...ln) U sum_seq(l2...ln)
+% sum_seq(i,o)
+sum_seq([],[]).
+sum_seq([H|T],[S|R]):-
+    take_all(H,T,S,R1),
+    sum_seq(R1,R).
+
+% main(l1...ln) = { l1...ln, sum_seq(l1...ln) = l1...ln
+%                   sum_seq(l1...ln) , otherwise
+% main(i,o)
+main(L,R):-
+    sum_seq(L,L1),
+    ( L = L1 -> R = L1;
+      main(L1, R)
+    ).

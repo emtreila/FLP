@@ -1,0 +1,38 @@
+% C. Write a PROLOG program that generates the list of all combinations
+% of k elements with numbers from 1 to N, with the property that the
+% difference between two consecutive numbers from a combination has an
+% even value. Write the mathematical models and flow models for the
+% predicates used.
+
+% For example, for N = 4, k = 2 -> [[1, 3], [2, 4]]
+
+% range(a,b) = { [b], a = b
+%                a U range(a+1, b), otherwise
+% range(i,i,o)
+range(B,B,[B]).
+range(A,B,[A|R]):-
+    A < B,
+    A1 is A + 1,
+    range(A1,B,R).
+
+remove([H|T],H,T).
+remove([H|T],X,[H|R]):-
+    remove(T,X,R).
+
+comb(_,0,[]).
+comb(L,K,[X|R]):-
+    K > 0,
+    remove(L,X,L1),
+    K1 is K - 1,
+    comb(L1,K1,R).
+
+even_dif([_]).
+even_dif([A,B|T]):-
+    D is B - A,
+    D mod 2 =:= 0,
+    even_dif([B|T]).
+
+final(N,K,C):-
+    range(1,N,R),
+    comb(R,K,C),
+    even_dif(C).

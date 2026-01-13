@@ -1,0 +1,34 @@
+% C. Write a PROLOG program that generates the list of permutations of
+% the set 1..N, having the property that the absolute value of the
+% difference between two consecutive values from the permutation is = 2.
+% Write the mathematical models and flow models for the predicates used.
+
+%For example, for N = 4 :[[3,1,4,2], [2,4,1,3]]
+
+
+range(N,N,[N]).
+range(I,N,[I|R]):-
+    I < N,
+    I1 is I + 1,
+    range(I1, N, R).
+
+remove(H,[H|T],T).
+remove(X,[H|T],[H|R]):-
+    remove(X,T,R).
+
+perm([],[]).
+perm(L,[H|T]):-
+    remove(H,L,R),
+    perm(R,T).
+
+value([]).
+value([_]).
+value([A,B|T]):-
+    D is abs(A-B),
+    D >= 2,
+    value([B|T]).
+
+solve(I,N,R):-
+    range(I,N,P),
+    perm(P,R),
+    value(R).
